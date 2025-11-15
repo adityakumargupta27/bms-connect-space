@@ -1,3 +1,6 @@
+"use client";
+import React from "react";
+
 import { useState } from 'react';
 import { Bell, Calendar, Users, Trophy, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -9,7 +12,7 @@ interface Notification {
   description: string;
   type: 'event' | 'club' | 'achievement';
   date: string;
-  icon: typeof Calendar;
+  icon: React.ComponentType<any>;
 }
 
 const notifications: Notification[] = [
@@ -73,8 +76,8 @@ const NotificationBell = () => {
       </Button>
 
       {isOpen && (
-        <div className="absolute right-0 top-12 w-96 max-h-[600px] overflow-y-auto z-50 animate-scale-in">
-          <FloatingCard className="relative">
+        <div className="fixed right-4 top-16 w-96 max-h-[600px] overflow-y-auto z-[9999] animate-scale-in">
+          <FloatingCard className="relative bg-background shadow-xl border border-primary/20">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-bold text-foreground">
                 Notifications
@@ -95,16 +98,18 @@ const NotificationBell = () => {
                 return (
                   <div
                     key={notification.id}
-                    className="p-3 rounded-lg bg-background/50 border border-primary/10 hover:border-primary/30 transition-all cursor-pointer group"
+                    className="p-3 rounded-lg bg-background/70 backdrop-blur border border-primary/10 hover:border-primary/30 transition-all cursor-pointer"
                   >
                     <div className="flex items-start gap-3">
-                      <div className={`p-2 rounded-lg ${
-                        notification.type === 'event' 
-                          ? 'bg-blue-500/20' 
-                          : notification.type === 'club'
-                          ? 'bg-purple-500/20'
-                          : 'bg-green-500/20'
-                      }`}>
+                      <div
+                        className={`p-2 rounded-lg ${
+                          notification.type === 'event'
+                            ? 'bg-blue-500/20'
+                            : notification.type === 'club'
+                            ? 'bg-purple-500/20'
+                            : 'bg-green-500/20'
+                        }`}
+                      >
                         <Icon className="h-4 w-4 text-primary" />
                       </div>
                       <div className="flex-1">
@@ -115,11 +120,14 @@ const NotificationBell = () => {
                           {notification.description}
                         </p>
                         <p className="text-xs text-primary mt-2">
-                          {new Date(notification.date).toLocaleDateString('en-US', {
-                            month: 'short',
-                            day: 'numeric',
-                            year: 'numeric',
-                          })}
+                          {new Date(notification.date).toLocaleDateString(
+                            'en-US',
+                            {
+                              month: 'short',
+                              day: 'numeric',
+                              year: 'numeric',
+                            }
+                          )}
                         </p>
                       </div>
                     </div>
