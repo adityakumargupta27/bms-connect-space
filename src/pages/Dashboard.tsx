@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Book, Briefcase, Image, Megaphone, Users, Award } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import FloatingCard from '@/components/FloatingCard';
@@ -6,6 +7,8 @@ import CustomCursor from '@/components/CustomCursor';
 import NotificationBell from '@/components/NotificationBell';
 import CommentsSection from '@/components/CommentsSection';
 import { Button } from '@/components/ui/button';
+import { useNotification } from '@/context/NotificationContext';
+import { getNotifications } from '@/api/getNotifications';
 
 const sections = [
   {
@@ -52,6 +55,18 @@ const sections = [
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const { loadInitialNotifications } = useNotification();
+
+  useEffect(() => {
+    const initialNotifications = [
+      {
+        title: 'Welcome to BMS Connect!',
+        body: 'Explore the dashboard and connect with your peers.',
+      },
+      ...getNotifications().map(n => ({ title: n.title, body: n.description }))
+    ];
+    loadInitialNotifications(initialNotifications);
+  }, [loadInitialNotifications]);
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -117,15 +132,15 @@ const Dashboard = () => {
             <div className="mt-6 grid grid-cols-3 gap-4 text-center">
               <div>
                 <div className="text-xl font-bold text-green-500">+150</div>
-                <div className="text-xs text-foreground/60">This Week</div>
+                <p className="text-xs text-foreground/60">This Week</p>
               </div>
               <div>
                 <div className="text-xl font-bold text-blue-500">12</div>
-                <div className="text-xs text-foreground/60">Events</div>
+                <p className="text-xs text-foreground/60">Events</p>
               </div>
               <div>
                 <div className="text-xl font-bold text-purple-500">5</div>
-                <div className="text-xs text-foreground/60">Achievements</div>
+                <p className="text-xs text-foreground/60">Achievements</p>
               </div>
             </div>
           </FloatingCard>
