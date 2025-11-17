@@ -1,7 +1,6 @@
 import { ArrowLeft, Users, UserPlus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import FloatingCard from '@/components/FloatingCard';
 import StarBackground from '@/components/StarBackground';
 import CustomCursor from '@/components/CustomCursor';
 
@@ -72,7 +71,7 @@ const Communities = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl">
           {communities.map((community, index) => (
-            <FloatingCard key={community.id} delay={index * 0.1}>
+            <div key={community.id} className="p-6 bg-background/20 rounded-lg">
               <h3 className="text-2xl font-bold text-foreground mb-2">
                 {community.name}
               </h3>
@@ -101,7 +100,7 @@ const Communities = () => {
                 <UserPlus className="h-4 w-4 mr-2" />
                 Join Community
               </Button>
-            </FloatingCard>
+            </div>
           ))}
         </div>
       </div>

@@ -57,7 +57,7 @@ const CommentsSection = () => {
     }
 
     const comment: Comment = {
-      id: comments.length + 1,
+      id: Date.now(),
       author: 'You',
       avatar: 'YO',
       content: newComment,
@@ -84,7 +84,7 @@ const CommentsSection = () => {
       </h2>
 
       {/* New Comment Input */}
-      <FloatingCard className="mb-6">
+      <div className="mb-6 p-6 bg-background/20 rounded-lg z-10">
         <form onSubmit={handleSubmit}>
           <Textarea
             value={newComment}
@@ -102,7 +102,7 @@ const CommentsSection = () => {
             </Button>
           </div>
         </form>
-      </FloatingCard>
+      </div>
 
       {/* Comments List */}
       <div className="space-y-4">
