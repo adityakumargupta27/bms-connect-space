@@ -5,9 +5,23 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import FloatingCard from '@/components/FloatingCard';
 import StarBackground from '@/components/StarBackground';
+import { useState } from 'react';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  SelectPortal,
+} from "@/components/ui/select";
 
 const Settings = () => {
   const navigate = useNavigate();
+  const [language, setLanguage] = useState('English');
+
+  const handleLanguageChange = (value: string) => {
+    setLanguage(value);
+  };
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -107,12 +121,18 @@ const Settings = () => {
             <div className="space-y-4">
               <div>
                 <Label className="text-foreground mb-2 block">Language</Label>
-                <select className="w-full p-2 rounded-lg bg-background/50 border border-primary/20 text-foreground">
-                  <option>English</option>
-                  <option>Spanish</option>
-                  <option>French</option>
-                  <option>German</option>
-                </select>
+                <Select value={language} onValueChange={handleLanguageChange}>
+                  <SelectTrigger className="w-full rounded-lg bg-background/50 border border-primary/20 text-foreground">
+                    <SelectValue placeholder="Select a language" />
+                  </SelectTrigger>
+                  <SelectPortal>
+                    <SelectContent>
+                      <SelectItem value="English">English</SelectItem>
+                      <SelectItem value="Hindi">Hindi</SelectItem>
+                      <SelectItem value="Kannada">Kannada</SelectItem>
+                    </SelectContent>
+                  </SelectPortal>
+                </Select>
               </div>
             </div>
           </FloatingCard>
