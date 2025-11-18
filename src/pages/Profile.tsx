@@ -27,17 +27,17 @@ const Profile = () => {
             <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-purple-500 flex items-center justify-center text-white text-3xl font-bold mx-auto mb-4">
               JD
             </div>
-            <h1 className="text-3xl font-bold text-foreground mb-2">John Doe</h1>
-            <p className="text-foreground/70 mb-4">Computer Science • Class of 2026</p>
+            <h1 className="text-3xl font-bold text-foreground mb-2">Aditya kumar gupta</h1>
+            <p className="text-foreground/70 mb-4">Computer Science • Class of 2028</p>
             
             <div className="flex items-center justify-center gap-6 text-sm">
               <div className="flex items-center gap-2 text-foreground/60">
                 <Mail className="h-4 w-4" />
-                <span>john.doe@bms.edu</span>
+                <span>adityakumargupta.cs24@bmsce.ac.in</span>
               </div>
               <div className="flex items-center gap-2 text-foreground/60">
                 <Calendar className="h-4 w-4" />
-                <span>Joined Sep 2024</span>
+                <span>Joined oct 2024</span>
               </div>
             </div>
           </FloatingCard>
