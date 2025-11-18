@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import FloatingCard from '@/components/FloatingCard';
 import StarBackground from '@/components/StarBackground';
-import CustomCursor from '@/components/CustomCursor';
 
 const resources = [
   {
@@ -46,7 +45,6 @@ const StudyCorner = () => {
   return (
     <div className="min-h-screen relative overflow-hidden">
       <StarBackground />
-      <CustomCursor />
 
       <div className="relative z-10 container mx-auto px-4 py-12">
         <Button

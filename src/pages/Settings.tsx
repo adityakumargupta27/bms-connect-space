@@ -5,7 +5,6 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import FloatingCard from '@/components/FloatingCard';
 import StarBackground from '@/components/StarBackground';
-import CustomCursor from '@/components/CustomCursor';
 
 const Settings = () => {
   const navigate = useNavigate();
@@ -13,7 +12,6 @@ const Settings = () => {
   return (
     <div className="min-h-screen relative overflow-hidden">
       <StarBackground />
-      <CustomCursor />
 
       <div className="relative z-10 container mx-auto px-4 py-12 max-w-4xl">
         <Button

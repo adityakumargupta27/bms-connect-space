@@ -3,7 +3,6 @@ import { Book, Briefcase, Image, Megaphone, Users, Award } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import FloatingCard from '@/components/FloatingCard';
 import StarBackground from '@/components/StarBackground';
-import CustomCursor from '@/components/CustomCursor';
 import NotificationBell from '@/components/NotificationBell';
 import CommentsSection from '@/components/CommentsSection';
 import { Button } from '@/components/ui/button';
@@ -71,7 +70,6 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen relative overflow-hidden">
       <StarBackground />
-      <CustomCursor />
 
       {/* Header */}
       <header className="relative z-10 border-b border-primary/20 backdrop-blur-lg bg-background/50">

@@ -1,8 +1,7 @@
 import { useState } from 'react';
-import { Send, Heart, MessageCircle } from 'lucide-react';
+import { Send, Heart, MessageCircle, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import FloatingCard from './FloatingCard';
 import { toast } from 'sonner';
 
 interface Comment {
@@ -77,6 +76,11 @@ const CommentsSection = () => {
     ));
   };
 
+  const handleDelete = (id: number) => {
+    setComments(comments.filter(c => c.id !== id));
+    toast.success('Comment deleted!');
+  };
+
   return (
     <div className="max-w-4xl mx-auto">
       <h2 className="text-3xl font-bold text-foreground mb-6">
@@ -107,7 +111,7 @@ const CommentsSection = () => {
       {/* Comments List */}
       <div className="space-y-4">
         {comments.map((comment) => (
-          <FloatingCard key={comment.id}>
+          <div key={comment.id} className="p-6 bg-background/20 rounded-lg">
             <div className="flex gap-4">
               {/* Avatar */}
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-purple-500 flex items-center justify-center text-white font-bold flex-shrink-0">
@@ -142,10 +146,19 @@ const CommentsSection = () => {
                     <MessageCircle className="h-4 w-4" />
                     <span>{comment.replies} replies</span>
                   </button>
+                  {comment.author === 'You' && (
+                     <button
+                        onClick={() => handleDelete(comment.id)}
+                        className="flex items-center gap-1 text-sm text-foreground/60 hover:text-red-500 transition-colors"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                        <span>Delete</span>
+                      </button>
+                  )}
                 </div>
               </div>
             </div>
-          </FloatingCard>
+          </div>
         ))}
       </div>
     </div>

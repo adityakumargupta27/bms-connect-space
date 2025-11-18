@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import StarBackground from '@/components/StarBackground';
-import CustomCursor from '@/components/CustomCursor';
 import { toast } from 'sonner';
 
 const Login = () => {
@@ -38,7 +37,6 @@ const Login = () => {
   return (
     <div className="min-h-screen relative overflow-hidden">
       <StarBackground />
-      <CustomCursor />
       
       <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
         <div className="w-full max-w-md animate-scale-in">
