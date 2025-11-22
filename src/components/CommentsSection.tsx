@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Send, Heart, MessageCircle, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 
 interface Comment {
-  id: number;
+  id: string | number;
   author: string;
   avatar: string;
   content: string;
@@ -14,71 +14,92 @@ interface Comment {
   replies: number;
 }
 
-const initialComments: Comment[] = [
-  {
-    id: 1,
-    author: 'Advit Ajith Shanbhagh',
-    avatar: 'AA',
-    content: 'Anyone up for the badminton tournaments ?',
-    timestamp: '2 hours ago',
-    likes: 24,
-    replies: 5,
-  },
-  {
-    id: 2,
-    author: 'Aditya Rohela',
-    avatar: 'AR',
-    content: 'There should be a clash of clans club too.... ',
-    timestamp: '5 hours ago',
-    likes: 18,
-    replies: 3,
-  },
-  {
-    id: 3,
-    author: 'Aditya kumar gupta',
-    avatar: 'AG',
-    content: 'Anyone forming team for the hackathon this weekend ?',
-    timestamp: '1 day ago',
-    likes: 31,
-    replies: 12,
-  },
-];
-
 const CommentsSection = () => {
-  const [comments, setComments] = useState<Comment[]>(initialComments);
+  const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
+  const [loading, setLoading] = useState(true);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    fetchComments();
+  }, []);
+
+  const fetchComments = async () => {
+    try {
+      const response = await fetch('/api/comments');
+      if (!response.ok) throw new Error('Failed to fetch comments');
+      const data = await response.json();
+
+      const formattedComments = data.map((c: any) => ({
+        id: c._id,
+        author: c.author,
+        avatar: c.avatar,
+        content: c.content,
+        timestamp: new Date(c.created_at).toLocaleDateString(),
+        likes: c.likes,
+        replies: 0
+      }));
+
+      setComments(formattedComments);
+    } catch (error) {
+      console.error('Error fetching comments:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newComment.trim()) {
       toast.error('Please write a comment');
       return;
     }
 
-    const comment: Comment = {
-      id: Date.now(),
-      author: 'You',
-      avatar: 'YO',
-      content: newComment,
-      timestamp: 'Just now',
-      likes: 0,
-      replies: 0,
-    };
+    try {
+      const response = await fetch('/api/comments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          author: 'You',
+          avatar: 'YO',
+          content: newComment,
+        }),
+      });
 
-    setComments([comment, ...comments]);
-    setNewComment('');
-    toast.success('Comment posted!');
+      if (!response.ok) throw new Error('Failed to post comment');
+
+      setNewComment('');
+      toast.success('Comment posted!');
+      fetchComments();
+    } catch (error) {
+      console.error('Error posting comment:', error);
+      toast.error('Failed to post comment');
+    }
   };
 
-  const handleLike = (id: number) => {
-    setComments(comments.map(c => 
-      c.id === id ? { ...c, likes: c.likes + 1 } : c
-    ));
+  const handleLike = async (id: string | number) => {
+    try {
+      const response = await fetch(`/api/comments/${id}/like`, {
+        method: 'PATCH',
+      });
+      if (!response.ok) throw new Error('Failed to like comment');
+      fetchComments();
+    } catch (error) {
+      console.error('Error liking comment:', error);
+    }
   };
 
-  const handleDelete = (id: number) => {
-    setComments(comments.filter(c => c.id !== id));
-    toast.success('Comment deleted!');
+  const handleDelete = async (id: string | number) => {
+    try {
+      const response = await fetch(`/api/comments/${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed to delete comment');
+      toast.success('Comment deleted!');
+      fetchComments();
+    } catch (error) {
+      console.error('Error deleting comment:', error);
+      toast.error('Failed to delete comment');
+    }
   };
 
   return (
@@ -147,13 +168,13 @@ const CommentsSection = () => {
                     <span>{comment.replies} replies</span>
                   </button>
                   {comment.author === 'You' && (
-                     <button
-                        onClick={() => handleDelete(comment.id)}
-                        className="flex items-center gap-1 text-sm text-foreground/60 hover:text-red-500 transition-colors"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                        <span>Delete</span>
-                      </button>
+                    <button
+                      onClick={() => handleDelete(comment.id)}
+                      className="flex items-center gap-1 text-sm text-foreground/60 hover:text-red-500 transition-colors"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                      <span>Delete</span>
+                    </button>
                   )}
                 </div>
               </div>
