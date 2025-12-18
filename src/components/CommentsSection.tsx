@@ -1,11 +1,14 @@
+
 import { useState, useEffect } from 'react';
 import { Send, Heart, MessageCircle, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
+import { db } from '@/lib/firebase'; // Import the Firestore database instance
+import { collection, getDocs, addDoc, doc, deleteDoc, updateDoc, increment } from 'firebase/firestore';
 
 interface Comment {
-  id: string | number;
+  id: string;
   author: string;
   avatar: string;
   content: string;
@@ -25,21 +28,10 @@ const CommentsSection = () => {
 
   const fetchComments = async () => {
     try {
-      const response = await fetch('/api/comments');
-      if (!response.ok) throw new Error('Failed to fetch comments');
-      const data = await response.json();
-
-      const formattedComments = data.map((c: any) => ({
-        id: c._id,
-        author: c.author,
-        avatar: c.avatar,
-        content: c.content,
-        timestamp: new Date(c.created_at).toLocaleDateString(),
-        likes: c.likes,
-        replies: 0
-      }));
-
-      setComments(formattedComments);
+      const commentsCollection = collection(db, 'comments');
+      const commentsSnapshot = await getDocs(commentsCollection);
+      const commentsList = commentsSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })) as Comment[];
+      setComments(commentsList);
     } catch (error) {
       console.error('Error fetching comments:', error);
     } finally {
@@ -55,47 +47,41 @@ const CommentsSection = () => {
     }
 
     try {
-      const response = await fetch('/api/comments', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          author: 'You',
-          avatar: 'YO',
-          content: newComment,
-        }),
+      await addDoc(collection(db, 'comments'), {
+        author: 'You',
+        avatar: 'YO',
+        content: newComment,
+        timestamp: new Date().toLocaleDateString(),
+        likes: 0,
+        replies: 0,
       });
-
-      if (!response.ok) throw new Error('Failed to post comment');
 
       setNewComment('');
       toast.success('Comment posted!');
-      fetchComments();
+      fetchComments(); // Refresh comments after posting
     } catch (error) {
       console.error('Error posting comment:', error);
       toast.error('Failed to post comment');
     }
   };
 
-  const handleLike = async (id: string | number) => {
+  const handleLike = async (id: string) => {
     try {
-      const response = await fetch(`/api/comments/${id}/like`, {
-        method: 'PATCH',
+      const commentRef = doc(db, 'comments', id);
+      await updateDoc(commentRef, {
+        likes: increment(1)
       });
-      if (!response.ok) throw new Error('Failed to like comment');
-      fetchComments();
+      fetchComments(); // Refresh comments to show the new like count
     } catch (error) {
       console.error('Error liking comment:', error);
     }
   };
 
-  const handleDelete = async (id: string | number) => {
+  const handleDelete = async (id: string) => {
     try {
-      const response = await fetch(`/api/comments/${id}`, {
-        method: 'DELETE',
-      });
-      if (!response.ok) throw new Error('Failed to delete comment');
+      await deleteDoc(doc(db, 'comments', id));
       toast.success('Comment deleted!');
-      fetchComments();
+      fetchComments(); // Refresh comments after deleting
     } catch (error) {
       console.error('Error deleting comment:', error);
       toast.error('Failed to delete comment');
