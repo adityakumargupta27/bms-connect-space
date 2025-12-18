@@ -3,6 +3,7 @@ import { createContext, useContext, useState, useEffect, ReactNode, useCallback 
 interface UserContextType {
   username: string | null;
   avatar: string | null;
+  loading: boolean;
   login: (username: string, avatar: string) => void;
   logout: () => void;
 }
@@ -12,15 +13,20 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [username, setUsername] = useState<string | null>(null);
   const [avatar, setAvatar] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const storedUsername = localStorage.getItem('username');
-    const storedAvatar = localStorage.getItem('avatar');
-    if (storedUsername) {
-      setUsername(storedUsername);
-    }
-    if (storedAvatar) {
-      setAvatar(storedAvatar);
+    try {
+      const storedUsername = localStorage.getItem('username');
+      const storedAvatar = localStorage.getItem('avatar');
+      if (storedUsername) {
+        setUsername(storedUsername);
+      }
+      if (storedAvatar) {
+        setAvatar(storedAvatar);
+      }
+    } finally {
+      setLoading(false);
     }
   }, []);
 
@@ -39,7 +45,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ username, avatar, login, logout }}>
+    <UserContext.Provider value={{ username, avatar, loading, login, logout }}>
       {children}
     </UserContext.Provider>
   );
