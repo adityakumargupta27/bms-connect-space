@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Book, Briefcase, Image, Megaphone, Users, Award } from 'lucide-react';
+import { Book, Briefcase, Image, Megaphone, Users, Award, LogOut, User, SlidersHorizontal } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import FloatingCard from '@/components/FloatingCard';
 import StarBackground from '@/components/StarBackground';
@@ -8,6 +8,8 @@ import CommentsSection from '@/components/CommentsSection';
 import { Button } from '@/components/ui/button';
 import { useNotification } from '@/context/NotificationContext';
 import { getNotifications } from '@/api/getNotifications';
+import { auth } from '@/lib/firebase';
+import { toast } from 'sonner';
 
 const sections = [
   {
@@ -56,6 +58,16 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const { loadInitialNotifications } = useNotification();
 
+  const handleLogout = async () => {
+    try {
+      await auth.signOut();
+      toast.success("You have been logged out.");
+      navigate('/');
+    } catch (error) {
+      toast.error("Failed to log out. Please try again.");
+    }
+  };
+
   useEffect(() => {
     const initialNotifications = [
       {
@@ -77,21 +89,31 @@ const Dashboard = () => {
           <h1 className="text-3xl font-bold bg-gradient-to-r from-primary via-white to-primary bg-clip-text text-transparent">
             BMS Connect
           </h1>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
             <NotificationBell />
             <Button
               variant="ghost"
+              size="icon"
               onClick={() => navigate('/profile')}
               className="text-foreground hover:text-primary hover:bg-primary/10"
             >
-              Profile
+              <User className="h-5 w-5" />
             </Button>
             <Button
-              variant="outline"
+              variant="ghost"
+              size="icon"
               onClick={() => navigate('/settings')}
-              className="border-primary/50 text-foreground hover:bg-primary/10 hover:border-primary"
+              className="text-foreground hover:text-primary hover:bg-primary/10"
             >
-              Settings
+              <SlidersHorizontal className="h-5 w-5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleLogout}
+              className="text-foreground hover:text-primary hover:bg-primary/10"
+            >
+              <LogOut className="h-5 w-5" />
             </Button>
           </div>
         </div>

@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { ArrowLeft, Briefcase, Download, FileText } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -5,10 +6,21 @@ import { Button } from '@/components/ui/button';
 import FloatingCard from '@/components/FloatingCard';
 import StarBackground from '@/components/StarBackground';
 import { toast } from 'sonner';
+import { db } from '@/lib/firebase'; // Import the Firestore database instance
+import { collection, getDocs } from 'firebase/firestore';
+
+interface StudyResource {
+  id: string;
+  subject: string;
+  title: string;
+  description: string;
+  downloads: number;
+  file_url: string;
+}
 
 const StudyCorner = () => {
   const navigate = useNavigate();
-  const [resources, setResources] = useState<any[]>([]);
+  const [resources, setResources] = useState<StudyResource[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -17,12 +29,13 @@ const StudyCorner = () => {
 
   const fetchResources = async () => {
     try {
-      const response = await fetch('/api/study-materials');
-      if (!response.ok) throw new Error('Failed to fetch resources');
-      const data = await response.json();
-      setResources(data);
+      const resourcesCollection = collection(db, 'study-materials');
+      const resourcesSnapshot = await getDocs(resourcesCollection);
+      const resourcesList = resourcesSnapshot.docs.map(doc => ({ ...doc.data(), id: doc.id })) as StudyResource[];
+      setResources(resourcesList);
     } catch (error) {
       console.error('Error fetching resources:', error);
+      toast.error('Failed to load study materials.');
     } finally {
       setLoading(false);
     }
@@ -67,12 +80,12 @@ const StudyCorner = () => {
         ) : resources.length === 0 ? (
           <div className="text-center text-foreground/50">
             <p>No resources found.</p>
-            <p className="text-sm mt-2">Make sure you have added data to your MongoDB.</p>
+            <p className="text-sm mt-2">Check back later for study materials.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl">
             {resources.map((resource, index) => (
-              <FloatingCard key={resource._id || index} delay={index * 0.1}>
+              <FloatingCard key={resource.id || index} delay={index * 0.1}>
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center flex-shrink-0">
                     <FileText className="h-6 w-6 text-primary" />

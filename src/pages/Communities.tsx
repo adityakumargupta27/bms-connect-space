@@ -93,6 +93,7 @@ const Communities = () => {
               </div>
 
               <Button
+                onClick={() => navigate(`/join-community/${encodeURIComponent(community.name)}`)}
                 className="w-full bg-primary/20 hover:bg-primary text-foreground hover:text-white border border-primary/30"
               >
                 <UserPlus className="h-4 w-4 mr-2" />
