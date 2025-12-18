@@ -1,8 +1,9 @@
-import { ArrowLeft, Mail, Calendar, Award, TrendingUp } from 'lucide-react';
+import { ArrowLeft, Award, TrendingUp } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import FloatingCard from '@/components/FloatingCard';
 import StarBackground from '@/components/StarBackground';
+import ProfileCard from '@/components/ProfileCard';
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -23,27 +24,10 @@ const Profile = () => {
 
         <div className="animate-fade-in">
           {/* Profile Header */}
-          <FloatingCard className="text-center mb-6">
-            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-purple-500 flex items-center justify-center text-white text-3xl font-bold mx-auto mb-4">
-              JD
-            </div>
-            <h1 className="text-3xl font-bold text-foreground mb-2">Aditya kumar gupta</h1>
-            <p className="text-foreground/70 mb-4">Computer Science • Class of 2028</p>
-            
-            <div className="flex items-center justify-center gap-6 text-sm">
-              <div className="flex items-center gap-2 text-foreground/60">
-                <Mail className="h-4 w-4" />
-                <span>adityakumargupta.cs24@bmsce.ac.in</span>
-              </div>
-              <div className="flex items-center gap-2 text-foreground/60">
-                <Calendar className="h-4 w-4" />
-                <span>Joined oct 2024</span>
-              </div>
-            </div>
-          </FloatingCard>
+          <ProfileCard />
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-6">
             <FloatingCard delay={0.1} className="text-center">
               <Award className="h-8 w-8 text-primary mx-auto mb-2" />
               <div className="text-3xl font-bold text-primary mb-1">2,450</div>

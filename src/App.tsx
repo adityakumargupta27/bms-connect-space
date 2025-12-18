@@ -14,6 +14,7 @@ import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import { NotificationProvider } from "./context/NotificationContext";
+import { UserProvider } from "./context/UserContext"; // Import UserProvider
 import NotificationDrawer from "./components/NotificationDrawer";
 import JoinCommunity from './pages/JoinCommunity';
 
@@ -23,25 +24,27 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <NotificationProvider>
-        <Toaster />
-        <Sonner />
-        <NotificationDrawer />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Login />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/official" element={<Official />} />
-            <Route path="/magazine" element={<Magazine />} />
-            <Route path="/study-corner" element={<StudyCorner />} />
-            <Route path="/communities" element={<Communities />} />
-            <Route path="/gallery" element={<Gallery />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/join-community/:communityName" element={<JoinCommunity />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
+        <UserProvider> {/* Add UserProvider */}
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <NotificationDrawer />
+            <Routes>
+              <Route path="/" element={<Login />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/official" element={<Official />} />
+              <Route path="/magazine" element={<Magazine />} />
+              <Route path="/study-corner" element={<StudyCorner />} />
+              <Route path="/communities" element={<Communities />} />
+              <Route path="/gallery" element={<Gallery />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/join-community/:communityName" element={<JoinCommunity />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </UserProvider>
       </NotificationProvider>
     </TooltipProvider>
   </QueryClientProvider>

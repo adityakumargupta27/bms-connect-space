@@ -6,6 +6,7 @@ export const getNotifications = () => [
     date: new Date(2024, 6, 15),
     icon: "Trophy",
     slug: "code-and-create-hackathon",
+    path: "/official",
   },
   {
     id: 2,
@@ -14,6 +15,7 @@ export const getNotifications = () => [
     date: new Date(2024, 6, 12),
     icon: "Users",
     slug: "club-registrations",
+    path: "/official",
   },
   {
     id: 3,

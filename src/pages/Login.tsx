@@ -8,13 +8,16 @@ import { toast } from 'sonner';
 import { auth, provider } from '@/lib/firebase';
 import { signInWithPopup } from 'firebase/auth';
 import { Chrome, Eye, EyeOff } from 'lucide-react';
+import { useUser } from '@/context/UserContext';
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login, logout } = useUser();
   const [isLogin, setIsLogin] = useState(true);
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const defaultAvatar = 'https://i.imgur.com/8bXVnO4.png';
 
   const handleGoogleSignIn = async () => {
     try {
@@ -22,6 +25,10 @@ const Login = () => {
       const user = result.user;
 
       if (user.email && user.email.endsWith('@bmsce.ac.in')) {
+        const username = user.email.split('@')[0];
+        const avatar = user.photoURL || defaultAvatar;
+        login(username, avatar);
+
         toast.success(`Welcome, ${user.displayName}!`);
         navigate('/dashboard');
       } else {
@@ -37,17 +44,19 @@ const Login = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!username || !password) {
+    if (!email || !password) {
       toast.error('Please fill in all fields');
       return;
     }
 
-    if (!username.endsWith('@bmsce.ac.in')) {
+    if (!email.endsWith('@bmsce.ac.in')) {
         toast.error('Access denied. Your username must be a bmsce.ac.in email address.');
         return;
     }
 
-    // Simulate login
+    const username = email.split('@')[0];
+    login(username, defaultAvatar);
+
     toast.success(isLogin ? 'Welcome to BMS Connect!' : 'Account created successfully!');
     setTimeout(() => {
       navigate('/dashboard');
@@ -55,6 +64,7 @@ const Login = () => {
   };
 
   const handleGuestAccess = () => {
+    logout();
     toast.info('Entering as guest...');
     setTimeout(() => {
       navigate('/dashboard');
@@ -106,14 +116,14 @@ const Login = () => {
 
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="space-y-2">
-                <Label htmlFor="username" className="text-foreground">
+                <Label htmlFor="email" className="text-foreground">
                   BMSCE Email
                 </Label>
                 <Input
-                  id="username"
+                  id="email"
                   type="email"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="bg-background/50 border-primary/20 focus:border-primary text-foreground"
                   placeholder="username@bmsce.ac.in"
                 />

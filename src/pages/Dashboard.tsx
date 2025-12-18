@@ -10,6 +10,7 @@ import { useNotification } from '@/context/NotificationContext';
 import { getNotifications } from '@/api/getNotifications';
 import { auth } from '@/lib/firebase';
 import { toast } from 'sonner';
+import ProfileCard from '@/components/ProfileCard';
 
 const sections = [
   {
@@ -61,6 +62,9 @@ const Dashboard = () => {
   const handleLogout = async () => {
     try {
       await auth.signOut();
+      // Clear user data from localStorage
+      localStorage.removeItem('username');
+      localStorage.removeItem('avatar');
       toast.success("You have been logged out.");
       navigate('/');
     } catch (error) {
@@ -74,7 +78,11 @@ const Dashboard = () => {
         title: 'Welcome to BMS Connect!',
         body: 'Explore the dashboard and connect with your peers.',
       },
-      ...getNotifications().map(n => ({ title: n.title, body: n.description }))
+      ...getNotifications().map(n => ({
+        title: n.title,
+        body: n.description,
+        path: n.path, // Add path from API
+      }))
     ];
     loadInitialNotifications(initialNotifications);
   }, [loadInitialNotifications]);
@@ -122,12 +130,7 @@ const Dashboard = () => {
       {/* Main Dashboard */}
       <main className="relative z-10 container mx-auto px-4 py-12">
         <div className="text-center mb-12 animate-fade-in">
-          <h2 className="text-5xl font-bold mb-4 text-foreground">
-            Welcome to Your Universe
-          </h2>
-          <p className="text-foreground/70 text-xl">
-            Explore, connect, and collaborate with the BMS community
-          </p>
+          <ProfileCard />
         </div>
 
         {/* Activity Points Card */}
