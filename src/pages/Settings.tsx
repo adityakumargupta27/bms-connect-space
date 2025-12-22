@@ -5,23 +5,39 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import FloatingCard from '@/components/FloatingCard';
 import StarBackground from '@/components/StarBackground';
-import { useState } from 'react';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-  SelectPortal,
-} from "@/components/ui/select";
+import { useEffect } from 'react';
 
 const Settings = () => {
   const navigate = useNavigate();
-  const [language, setLanguage] = useState('English');
 
-  const handleLanguageChange = (value: string) => {
-    setLanguage(value);
-  };
+  useEffect(() => {
+    // Define the callback function on the window object
+    (window as any).googleTranslateElementInit = () => {
+      new (window as any).google.translate.TranslateElement(
+        { pageLanguage: 'en' },
+        'google_translate_element'
+      );
+    };
+
+    // Check if the script already exists to avoid adding it multiple times
+    if (!document.querySelector("script[src='//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit']")) {
+      const googleTranslateScript = document.createElement('script');
+      googleTranslateScript.type = 'text/javascript';
+      googleTranslateScript.async = true;
+      googleTranslateScript.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+      document.head.appendChild(googleTranslateScript);
+    }
+
+    // Cleanup function to remove the script and callback
+    return () => {
+      const googleTranslateScript = document.querySelector("script[src='//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit']");
+      if (googleTranslateScript) {
+        googleTranslateScript.remove();
+      }
+      delete (window as any).googleTranslateElementInit;
+    };
+  }, []);
+
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -120,19 +136,8 @@ const Settings = () => {
             </div>
             <div className="space-y-4">
               <div>
-                <Label className="text-foreground mb-2 block">Language</Label>
-                <Select value={language} onValueChange={handleLanguageChange}>
-                  <SelectTrigger className="w-full rounded-lg bg-background/50 border border-primary/20 text-foreground">
-                    <SelectValue placeholder="Select a language" />
-                  </SelectTrigger>
-                  <SelectPortal>
-                    <SelectContent>
-                      <SelectItem value="English">English</SelectItem>
-                      <SelectItem value="Hindi">Hindi</SelectItem>
-                      <SelectItem value="Kannada">Kannada</SelectItem>
-                    </SelectContent>
-                  </SelectPortal>
-                </Select>
+                <Label className="text-foreground mb-2 block">Change Language</Label>
+                <div id="google_translate_element"></div>
               </div>
             </div>
           </FloatingCard>

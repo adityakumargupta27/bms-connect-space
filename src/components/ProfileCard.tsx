@@ -5,7 +5,7 @@ const ProfileCard = () => {
   const { username, loading } = useUser();
 
   if (loading) {
-    return null; // or a loading skeleton
+    return null; 
   }
 
   return (
