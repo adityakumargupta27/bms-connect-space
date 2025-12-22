@@ -13,6 +13,7 @@ const articles = [
     date: '2025-11-12',
     readTime: '5 min read',
     category: 'Technology',
+    link: 'https://bmsce.ac.in/home/Machine-Learning-AI-and-ML-News-and-Events',
   },
   {
     id: 2,
@@ -22,6 +23,7 @@ const articles = [
     date: '2025-11-10',
     readTime: '8 min read',
     category: 'Features',
+    link: 'https://bmsce.ac.in/home/Computer-Science-and-Engineering-Student-Achievements',
   },
   {
     id: 3,
@@ -31,6 +33,7 @@ const articles = [
     date: '2025-11-08',
     readTime: '6 min read',
     category: 'Environment',
+    link: 'https://bmsce.ac.in/home/About-Niranthara',
   },
 ];
 
@@ -66,17 +69,19 @@ const Magazine = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl">
           {articles.map((article, index) => (
             <FloatingCard key={article.id} delay={index * 0.1}>
-              <div className="mb-3">
-                <span className="px-3 py-1 bg-primary/20 text-primary text-xs rounded-full">
-                  {article.category}
-                </span>
-              </div>
-              <h3 className="text-2xl font-bold text-foreground mb-3 hover:text-primary transition-colors cursor-pointer">
-                {article.title}
-              </h3>
-              <p className="text-foreground/70 mb-4">
-                {article.excerpt}
-              </p>
+              <a href={article.link} target="_blank" rel="noopener noreferrer" className="text-2xl font-bold text-foreground mb-3 hover:text-primary transition-colors cursor-pointer">
+                <div className="mb-3">
+                  <span className="px-3 py-1 bg-primary/20 text-primary text-xs rounded-full">
+                    {article.category}
+                  </span>
+                </div>
+                <h3 className="text-2xl font-bold text-foreground mb-3 hover:text-primary transition-colors cursor-pointer">
+                  {article.title}
+                </h3>
+                <p className="text-foreground/70 mb-4">
+                  {article.excerpt}
+                </p>
+              </a>
               <div className="flex items-center gap-4 text-sm text-foreground/50">
                 <div className="flex items-center gap-1">
                   <User className="h-4 w-4" />
