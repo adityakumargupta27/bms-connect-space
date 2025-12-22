@@ -3,48 +3,30 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import FloatingCard from '@/components/FloatingCard';
 import StarBackground from '@/components/StarBackground';
-
-const posts = [
-  {
-    id: 1,
-    author: 'Sarah Johnson',
-    avatar: 'SJ',
-    caption: 'Amazing sunset from the campus rooftop! 🌅',
-    likes: 142,
-    comments: 23,
-    timestamp: '2 hours ago',
-  },
-  {
-    id: 2,
-    author: 'Mike Chen',
-    avatar: 'MC',
-    caption: 'Study group vibes ☕📚',
-    likes: 89,
-    comments: 12,
-    timestamp: '5 hours ago',
-  },
-  {
-    id: 3,
-    author: 'Emily Davis',
-    avatar: 'ED',
-    caption: 'Won first place at the hackathon! 🏆',
-    likes: 256,
-    comments: 45,
-    timestamp: '1 day ago',
-  },
-  {
-    id: 4,
-    author: 'Alex Kumar',
-    avatar: 'AK',
-    caption: 'New art installation in the main hall',
-    likes: 178,
-    comments: 31,
-    timestamp: '1 day ago',
-  },
-];
+import { useState, useEffect } from 'react';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
 const Gallery = () => {
   const navigate = useNavigate();
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      const postsCollection = collection(db, 'gallery');
+      const postsSnapshot = await getDocs(postsCollection);
+      const postsList = postsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setPosts(postsList);
+    };
+
+    fetchPosts();
+  }, []);
+
+  const handleLike = (id) => {
+    setPosts(posts.map(post =>
+      post.id === id ? { ...post, likes: post.liked ? post.likes - 1 : post.likes + 1, liked: !post.liked } : post
+    ));
+  };
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -86,9 +68,9 @@ const Gallery = () => {
                 </div>
               </div>
 
-              {/* Image Placeholder */}
-              <div className="w-full h-64 bg-gradient-to-br from-primary/20 to-purple-500/20 rounded-lg mb-3 flex items-center justify-center">
-                <ImageIcon className="h-12 w-12 text-primary/50" />
+              {/* Image */}
+              <div className="w-full h-64 bg-gradient-to-br from-primary/20 to-purple-500/20 rounded-lg mb-3 overflow-hidden">
+                <img src={post.imageUrl} alt={post.caption} className="w-full h-full object-cover" />
               </div>
 
               {/* Caption */}
@@ -96,8 +78,11 @@ const Gallery = () => {
 
               {/* Actions */}
               <div className="flex items-center gap-4 pt-3 border-t border-primary/10">
-                <button className="flex items-center gap-2 text-foreground/60 hover:text-primary transition-colors">
-                  <Heart className="h-5 w-5" />
+                <button
+                  onClick={() => handleLike(post.id)}
+                  className={`flex items-center gap-2 text-foreground/60 hover:text-primary transition-colors ${post.liked ? 'text-primary' : ''}`}
+                >
+                  <Heart className={`h-5 w-5 ${post.liked ? 'fill-current' : ''}`} />
                   <span className="text-sm">{post.likes}</span>
                 </button>
                 <button className="flex items-center gap-2 text-foreground/60 hover:text-primary transition-colors">
