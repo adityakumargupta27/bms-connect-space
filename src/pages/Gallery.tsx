@@ -3,26 +3,71 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import FloatingCard from '@/components/FloatingCard';
 import StarBackground from '@/components/StarBackground';
-import { useState, useEffect } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { useState } from 'react';
+
+const initialPosts = [
+  {
+    id: 5,
+    author: 'Ananya Reddy',
+    avatar: 'AR',
+    caption: 'Bangalore is turning pink! The trumpet trees are in full bloom. 🌸 #PinkBangalore',
+    imageUrl: 'https://i.pinimg.com/originals/c5/d9/95/c5d995da2a9bcf1522ac0845a7b0c357.jpg',
+    likes: 350,
+    comments: 55,
+    timestamp: '4 hours ago',
+    liked: false,
+  },
+  {
+    id: 1,
+    author: 'Rohan Kumar',
+    avatar: 'RK',
+    caption: 'Golden hour over the Bangalore skyline is something else! ✨',
+    imageUrl: 'https://i.pinimg.com/originals/3d/83/83/3d8383351369a239a25227565a6c3f11.jpg',
+    likes: 180,
+    comments: 25,
+    timestamp: '8 hours ago',
+    liked: false,
+  },
+  {
+    id: 2,
+    author: 'Priya Sharma',
+    avatar: 'PS',
+    caption: 'A peaceful morning walk in the lush greenery of Cubbon Park. 🌳',
+    imageUrl: 'https://i.pinimg.com/originals/99/3a/42/993a429a3a96e38b1f5e6a0d2a2a0a25.jpg',
+    likes: 220,
+    comments: 40,
+    timestamp: '12 hours ago',
+    liked: false,
+  },
+  {
+    id: 3,
+    author: 'Aditya Singh',
+    avatar: 'AS',
+    caption: 'Exploring the delicious street food in VV Puram Food Street! 🤤',
+    imageUrl: 'https://i.pinimg.com/originals/5e/24/a3/5e24a3501f6004b73f8e53a2b53573c7.jpg',
+    likes: 310,
+    comments: 60,
+    timestamp: '1 day ago',
+    liked: false,
+  },
+  {
+    id: 4,
+    author: 'Sneha Patel',
+    avatar: 'SP',
+    caption: 'The magnificent Vidhana Soudha, an architectural marvel. 🏛️',
+    imageUrl: 'https://i.pinimg.com/originals/0d/17/87/0d17878d8a39a7c491a9cd288219808d.jpg',
+    likes: 250,
+    comments: 35,
+    timestamp: '2 days ago',
+    liked: false,
+  },
+];
 
 const Gallery = () => {
   const navigate = useNavigate();
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState(initialPosts);
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      const postsCollection = collection(db, 'gallery');
-      const postsSnapshot = await getDocs(postsCollection);
-      const postsList = postsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setPosts(postsList);
-    };
-
-    fetchPosts();
-  }, []);
-
-  const handleLike = (id) => {
+  const handleLike = (id: number) => {
     setPosts(posts.map(post =>
       post.id === id ? { ...post, likes: post.liked ? post.likes - 1 : post.likes + 1, liked: !post.liked } : post
     ));
