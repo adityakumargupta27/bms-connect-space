@@ -1,11 +1,12 @@
-import { ArrowLeft, Image as ImageIcon, Heart, MessageCircle } from 'lucide-react';
+import { ArrowLeft, Image as ImageIcon, Heart, MessageCircle, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import FloatingCard from '@/components/FloatingCard';
 import StarBackground from '@/components/StarBackground';
-import { useEffect, useState } from 'react';
-import { db } from '@/lib/firebase';
-import { collection, query, orderBy, getDocs, Timestamp, doc, updateDoc, increment } from 'firebase/firestore';
+import { useEffect, useState, useRef } from 'react';
+import { db, storage } from '@/lib/firebase';
+import { collection, query, orderBy, getDocs, Timestamp, doc, updateDoc, increment, addDoc } from 'firebase/firestore';
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 interface Post {
   id: string;
@@ -22,6 +23,7 @@ interface Post {
 const Gallery = () => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState<Post[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchPosts = async () => {
     try {
@@ -69,6 +71,43 @@ const Gallery = () => {
       ));
     }
   };
+
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const storageRef = ref(storage, `gallery-images/${Date.now()}_${file.name}`);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    uploadTask.on('state_changed', 
+      (snapshot) => {
+        // Optional: show upload progress
+      },
+      (error) => {
+        console.error("Upload failed:", error);
+        alert("Failed to upload image. Please try again.");
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+          const newPost = {
+            author: "New User", // Replace with actual user data
+            avatar: "NU",
+            caption: "A new photo!",
+            imageUrl: downloadURL,
+            likes: 0,
+            comments: 0,
+            timestamp: Timestamp.now(),
+          };
+          try {
+            await addDoc(collection(db, "gallery"), newPost);
+            fetchPosts(); // Refresh the gallery
+          } catch (error) {
+            console.error("Error creating new post:", error);
+          }
+        });
+      }
+    );
+  };
   
   const formatTimestamp = (timestamp: Timestamp) => {
     const date = timestamp.toDate();
@@ -89,6 +128,13 @@ const Gallery = () => {
   return (
     <div className="min-h-screen relative overflow-hidden">
       <StarBackground />
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleImageUpload}
+        className="hidden"
+        accept="image/*"
+      />
 
       <div className="relative z-10 container mx-auto px-4 py-12">
         <Button
@@ -101,11 +147,17 @@ const Gallery = () => {
         </Button>
 
         <div className="mb-8 animate-fade-in">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-yellow-500 to-amber-500 flex items-center justify-center">
-              <ImageIcon className="h-6 w-6 text-white" />
+          <div className="flex items-center justify-between gap-3 mb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-yellow-500 to-amber-500 flex items-center justify-center">
+                <ImageIcon className="h-6 w-6 text-white" />
+              </div>
+              <h1 className="text-4xl font-bold text-foreground">Gallery</h1>
             </div>
-            <h1 className="text-4xl font-bold text-foreground">Gallery</h1>
+            <Button onClick={() => fileInputRef.current?.click()} className="bg-primary/20 hover:bg-primary text-foreground hover:text-white border border-primary/30">
+              <Plus className="h-4 w-4 mr-2" />
+              Add Photo
+            </Button>
           </div>
           <p className="text-foreground/70 text-lg">
             Share moments and memories with the community
