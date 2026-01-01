@@ -7,6 +7,8 @@ import { useEffect, useState, useRef } from 'react';
 import { db, storage } from '@/lib/firebase';
 import { collection, query, orderBy, getDocs, Timestamp, doc, updateDoc, increment, addDoc } from 'firebase/firestore';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { useToast } from '@/hooks/use-toast';
+import { useUser } from '@/context/UserContext';
 
 interface Post {
   id: string;
@@ -24,6 +26,8 @@ const Gallery = () => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState<Post[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { toast } = useToast();
+  const { username, avatar } = useUser();
 
   const fetchPosts = async () => {
     try {
@@ -52,12 +56,10 @@ const Gallery = () => {
     const newLikedState = !postToUpdate.liked;
     const newLikesCount = newLikedState ? postToUpdate.likes + 1 : postToUpdate.likes - 1;
 
-    // Optimistically update UI
     setPosts(posts.map(p => 
       p.id === id ? { ...p, likes: newLikesCount, liked: newLikedState } : p
     ));
 
-    // Update Firestore
     try {
       const postRef = doc(db, 'gallery', id);
       await updateDoc(postRef, {
@@ -65,7 +67,6 @@ const Gallery = () => {
       });
     } catch (error) {
       console.error("Failed to update like in Firestore: ", error);
-      // Revert UI on failure
       setPosts(posts.map(p => 
         p.id === id ? { ...p, likes: postToUpdate.likes, liked: postToUpdate.liked } : p
       ));
@@ -76,22 +77,40 @@ const Gallery = () => {
     const file = event.target.files?.[0];
     if (!file) return;
 
+    const toastId = toast({
+      title: "Starting Upload...",
+      description: "Your photo is being prepared.",
+    }).id;
+
     const storageRef = ref(storage, `gallery-images/${Date.now()}_${file.name}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
 
     uploadTask.on('state_changed', 
       (snapshot) => {
-        // Optional: show upload progress
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log('Upload is ' + progress + '% done');
+        toast({
+          id: toastId,
+          title: `Uploading Photo: ${Math.round(progress)}%`,
+          description: "Please wait...",
+        });
       },
       (error) => {
         console.error("Upload failed:", error);
-        alert("Failed to upload image. Please try again.");
+        toast({
+          id: toastId,
+          title: "Photo Upload Failed",
+          description: "Could not upload your photo. Please check the console for details.",
+          variant: "destructive",
+        });
       },
       () => {
+        console.log("Upload complete. Getting download URL...");
         getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+          console.log('File available at', downloadURL);
           const newPost = {
-            author: "New User", // Replace with actual user data
-            avatar: "NU",
+            author: username || "Anonymous",
+            avatar: avatar || "A",
             caption: "A new photo!",
             imageUrl: downloadURL,
             likes: 0,
@@ -99,11 +118,32 @@ const Gallery = () => {
             timestamp: Timestamp.now(),
           };
           try {
+            console.log("Creating new post in Firestore...");
             await addDoc(collection(db, "gallery"), newPost);
+            console.log("Post created. Refreshing gallery...");
             fetchPosts(); // Refresh the gallery
+            toast({
+              id: toastId,
+              title: "Photo Uploaded Successfully!",
+              description: "Your photo is now live in the gallery.",
+            });
           } catch (error) {
             console.error("Error creating new post:", error);
+            toast({
+              id: toastId,
+              title: "Failed to Save Post",
+              description: "Your photo was uploaded, but we couldn't save it to the gallery.",
+              variant: "destructive",
+            });
           }
+        }).catch((error) => {
+            console.error("Failed to get download URL:", error);
+            toast({
+              id: toastId,
+              title: "Upload Failed",
+              description: "Could not get the photo URL after upload. Please check storage rules.",
+              variant: "destructive",
+            });
         });
       }
     );
