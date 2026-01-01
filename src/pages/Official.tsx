@@ -1,38 +1,50 @@
+import { useEffect, useState } from 'react';
 import { ArrowLeft, Megaphone, Pin } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import FloatingCard from '@/components/FloatingCard';
 import StarBackground from '@/components/StarBackground';
+import { db } from '@/lib/firebase';
+import { collection, query, orderBy, getDocs, Timestamp } from 'firebase/firestore';
 
-const announcements = [
-  {
-    id: 1,
-    title: 'Campus Reopening Guidelines',
-    content: 'Important updates regarding the upcoming semester and safety protocols.',
-    date: '2025-11-10',
-    author: 'Administration',
-    pinned: true,
-  },
-  {
-    id: 2,
-    title: 'Exam Schedule Released',
-    content: 'Final examination timetable has been published. Check your student portal.',
-    date: '2025-11-08',
-    author: 'Academic Office',
-    pinned: true,
-  },
-  {
-    id: 3,
-    title: 'New Library Hours',
-    content: 'Extended study hours during exam season. Open 24/7 starting next week.',
-    date: '2025-11-05',
-    author: 'Library Services',
-    pinned: false,
-  },
-];
+interface Announcement {
+  id: string;
+  title: string;
+  content: string;
+  date: Timestamp | Date | string;
+  author: string;
+  pinned: boolean;
+}
 
 const Official = () => {
   const navigate = useNavigate();
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+
+  useEffect(() => {
+    const fetchAnnouncements = async () => {
+      try {
+        const announcementsCol = collection(db, "announcements");
+        const q = query(announcementsCol, orderBy("date", "desc"));
+        const querySnapshot = await getDocs(q);
+        const announcementsList = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as Announcement[];
+        setAnnouncements(announcementsList);
+      } catch (error) {
+        console.error("Error fetching announcements: ", error);
+      }
+    };
+
+    fetchAnnouncements();
+  }, []);
+
+  const formatDate = (date: Timestamp | Date | string) => {
+    if (date instanceof Timestamp) {
+      return date.toDate().toLocaleDateString();
+    }
+    return new Date(date).toLocaleDateString();
+  };
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -77,7 +89,7 @@ const Official = () => {
                   <div className="flex items-center gap-4 text-sm text-foreground/50">
                     <span>{announcement.author}</span>
                     <span>•</span>
-                    <span>{new Date(announcement.date).toLocaleDateString()}</span>
+                    <span>{formatDate(announcement.date)}</span>
                   </div>
                 </div>
               </div>
