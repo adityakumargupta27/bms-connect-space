@@ -11,7 +11,7 @@ const Settings = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Define the callback function on the window object
+
     (window as any).googleTranslateElementInit = () => {
       new (window as any).google.translate.TranslateElement(
         { pageLanguage: 'en' },
@@ -19,7 +19,6 @@ const Settings = () => {
       );
     };
 
-    // Check if the script already exists to avoid adding it multiple times
     if (!document.querySelector("script[src='//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit']")) {
       const googleTranslateScript = document.createElement('script');
       googleTranslateScript.type = 'text/javascript';
@@ -28,7 +27,6 @@ const Settings = () => {
       document.head.appendChild(googleTranslateScript);
     }
 
-    // Cleanup function to remove the script and callback
     return () => {
       const googleTranslateScript = document.querySelector("script[src='//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit']");
       if (googleTranslateScript) {

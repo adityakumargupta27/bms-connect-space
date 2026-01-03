@@ -29,7 +29,6 @@ const Login = () => {
         const username = user.email.split('@')[0];
         const avatar = user.photoURL || defaultAvatar;
 
-        // Save user data to Firestore
         const userRef = doc(db, 'users', user.uid);
         await setDoc(userRef, {
           uid: user.uid,

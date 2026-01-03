@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import FloatingCard from '@/components/FloatingCard';
 import StarBackground from '@/components/StarBackground';
 import { toast } from 'sonner';
-import { db } from '@/lib/firebase'; // Import the Firestore database instance
+import { db } from '@/lib/firebase'; 
 import { collection, getDocs } from 'firebase/firestore';
 
 interface StudyResource {
