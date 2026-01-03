@@ -22,7 +22,7 @@ const StarBackground = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Set canvas size
+    
     const setCanvasSize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -30,7 +30,7 @@ const StarBackground = () => {
     setCanvasSize();
     window.addEventListener('resize', setCanvasSize);
 
-    // Generate stars
+    
     const starCount = 150;
     const stars: Star[] = [];
     const connections: Connection[] = [];
@@ -44,7 +44,7 @@ const StarBackground = () => {
       });
     }
 
-    // Create connections between nearby stars
+    
     const maxDistance = 150;
     for (let i = 0; i < stars.length; i++) {
       for (let j = i + 1; j < stars.length; j++) {
@@ -58,14 +58,14 @@ const StarBackground = () => {
       }
     }
 
-    // Animation variables
+    
     let frame = 0;
     const animate = () => {
       frame++;
       ctx.fillStyle = '#0b193d';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Draw connections
+      
       connections.forEach((conn) => {
         const star1 = stars[conn.from];
         const star2 = stars[conn.to];
@@ -82,7 +82,7 @@ const StarBackground = () => {
         ctx.stroke();
       });
 
-      // Draw stars with subtle pulsing
+      
       stars.forEach((star, index) => {
         const pulseOffset = Math.sin((frame + index * 10) / 60) * 0.2;
         const currentOpacity = star.opacity + pulseOffset;
@@ -92,7 +92,7 @@ const StarBackground = () => {
         ctx.fillStyle = `rgba(255, 255, 255, ${currentOpacity})`;
         ctx.fill();
 
-        // Add glow effect for larger stars
+        
         if (star.size > 1.5) {
           const gradient = ctx.createRadialGradient(
             star.x,

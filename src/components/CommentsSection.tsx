@@ -1,10 +1,9 @@
-
 import { useState, useEffect } from 'react';
 import { Send, Heart, MessageCircle, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
-import { db } from '@/lib/firebase'; // Import the Firestore database instance
+import { db } from '@/lib/firebase'; 
 import { collection, getDocs, addDoc, doc, deleteDoc, updateDoc, increment } from 'firebase/firestore';
 
 interface Comment {
@@ -58,7 +57,7 @@ const CommentsSection = () => {
 
       setNewComment('');
       toast.success('Comment posted!');
-      fetchComments(); // Refresh comments after posting
+      fetchComments(); 
     } catch (error) {
       console.error('Error posting comment:', error);
       toast.error('Failed to post comment');
@@ -71,7 +70,7 @@ const CommentsSection = () => {
       await updateDoc(commentRef, {
         likes: increment(1)
       });
-      fetchComments(); // Refresh comments to show the new like count
+      fetchComments(); 
     } catch (error) {
       console.error('Error liking comment:', error);
     }
@@ -81,7 +80,7 @@ const CommentsSection = () => {
     try {
       await deleteDoc(doc(db, 'comments', id));
       toast.success('Comment deleted!');
-      fetchComments(); // Refresh comments after deleting
+      fetchComments(); 
     } catch (error) {
       console.error('Error deleting comment:', error);
       toast.error('Failed to delete comment');
@@ -94,7 +93,7 @@ const CommentsSection = () => {
         Community Discussion
       </h2>
 
-      {/* New Comment Input */}
+      {}
       <div className="mb-6 p-6 bg-background/20 rounded-lg z-10">
         <form onSubmit={handleSubmit}>
           <Textarea
@@ -115,17 +114,17 @@ const CommentsSection = () => {
         </form>
       </div>
 
-      {/* Comments List */}
+      {}
       <div className="space-y-4">
         {comments.map((comment) => (
           <div key={comment.id} className="p-6 bg-background/20 rounded-lg">
             <div className="flex gap-4">
-              {/* Avatar */}
+              {}
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-purple-500 flex items-center justify-center text-white font-bold flex-shrink-0">
                 {comment.avatar}
               </div>
 
-              {/* Comment Content */}
+              {}
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="font-semibold text-foreground">
@@ -140,7 +139,7 @@ const CommentsSection = () => {
                   {comment.content}
                 </p>
 
-                {/* Actions */}
+                {}
                 <div className="flex items-center gap-4">
                   <button
                     onClick={() => handleLike(comment.id)}

@@ -23,10 +23,10 @@ const Profile = () => {
         </Button>
 
         <div className="animate-fade-in">
-          {/* Profile Header */}
+          {}
           <ProfileCard />
 
-          {/* Stats Grid */}
+          {}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-6">
             <FloatingCard delay={0.1} className="text-center">
               <Award className="h-8 w-8 text-primary mx-auto mb-2" />
@@ -47,7 +47,7 @@ const Profile = () => {
             </FloatingCard>
           </div>
 
-          {/* Recent Activity */}
+          {}
           <FloatingCard delay={0.4}>
             <h2 className="text-2xl font-bold text-foreground mb-4">Recent Activity</h2>
             <div className="space-y-3">

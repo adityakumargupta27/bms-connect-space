@@ -11,6 +11,7 @@ import { getNotifications } from '@/api/getNotifications';
 import { auth } from '@/lib/firebase';
 import { toast } from 'sonner';
 import ProfileCard from '@/components/ProfileCard';
+import { usePoint } from '@/context/PointContext'; 
 
 const sections = [
   {
@@ -58,11 +59,11 @@ const sections = [
 const Dashboard = () => {
   const navigate = useNavigate();
   const { loadInitialNotifications } = useNotification();
+  const { pointsData, loading: pointsLoading } = usePoint(); 
 
   const handleLogout = async () => {
     try {
       await auth.signOut();
-      // Clear user data from localStorage
       localStorage.removeItem('username');
       localStorage.removeItem('avatar');
       toast.success("You have been logged out.");
@@ -81,7 +82,7 @@ const Dashboard = () => {
       ...getNotifications().map(n => ({
         title: n.title,
         body: n.description,
-        path: n.path, // Add path from API
+        path: n.path,
       }))
     ];
     loadInitialNotifications(initialNotifications);
@@ -91,7 +92,6 @@ const Dashboard = () => {
     <div className="min-h-screen relative overflow-hidden">
       <StarBackground />
 
-      {/* Header */}
       <header className="relative z-10 border-b border-primary/20 backdrop-blur-lg bg-background/50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <h1 className="text-3xl font-bold bg-gradient-to-r from-primary via-white to-primary bg-clip-text text-transparent">
@@ -127,13 +127,12 @@ const Dashboard = () => {
         </div>
       </header>
 
-      {/* Main Dashboard */}
       <main className="relative z-10 container mx-auto px-4 py-12">
         <div className="text-center mb-12 animate-fade-in">
           <ProfileCard />
         </div>
 
-        {/* Activity Points Card */}
+        {}
         <div className="max-w-2xl mx-auto mb-12">
           <FloatingCard delay={0}>
             <div className="flex items-center justify-between">
@@ -147,29 +146,37 @@ const Dashboard = () => {
                 </div>
               </div>
               <div className="text-right">
-                <div className="text-4xl font-bold text-primary">2,450</div>
+                <div className="text-4xl font-bold text-primary">
+                  {pointsLoading ? '...' : pointsData?.totalPoints}
+                </div>
                 <div className="text-sm text-foreground/60">Total Points</div>
               </div>
             </div>
             
             <div className="mt-6 grid grid-cols-3 gap-4 text-center">
               <div>
-                <div className="text-xl font-bold text-green-500">+150</div>
+                <div className="text-xl font-bold text-green-500">
+                  +{pointsLoading ? '...' : pointsData?.weeklyPoints}
+                </div>
                 <p className="text-xs text-foreground/60">This Week</p>
               </div>
               <div>
-                <div className="text-xl font-bold text-blue-500">12</div>
+                <div className="text-xl font-bold text-blue-500">
+                  {pointsLoading ? '...' : pointsData?.events}
+                </div>
                 <p className="text-xs text-foreground/60">Events</p>
               </div>
               <div>
-                <div className="text-xl font-bold text-purple-500">5</div>
+                <div className="text-xl font-bold text-purple-500">
+                  {pointsLoading ? '...' : pointsData?.achievements}
+                </div>
                 <p className="text-xs text-foreground/60">Achievements</p>
               </div>
             </div>
           </FloatingCard>
         </div>
 
-        {/* Section Cards Grid */}
+        {}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto mb-16">
           {sections.map((section) => {
             const Icon = section.icon;
@@ -204,25 +211,25 @@ const Dashboard = () => {
           })}
         </div>
 
-        {/* Quick Stats */}
+        {}
         <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-16">
           <FloatingCard delay={0.5} className="text-center">
-            <div className="text-4xl font-bold text-primary mb-2">1,234</div>
+            <div className="text-4xl font-bold text-primary mb-2">1,500</div>
             <div className="text-foreground/70">Active Users</div>
           </FloatingCard>
           
           <FloatingCard delay={0.6} className="text-center">
-            <div className="text-4xl font-bold text-primary mb-2">567</div>
+            <div className="text-4xl font-bold text-primary mb-2">600</div>
             <div className="text-foreground/70">Communities</div>
           </FloatingCard>
           
           <FloatingCard delay={0.7} className="text-center">
-            <div className="text-4xl font-bold text-primary mb-2">8,901</div>
+            <div className="text-4xl font-bold text-primary mb-2">9,500</div>
             <div className="text-foreground/70">Posts Today</div>
           </FloatingCard>
         </div>
 
-        {/* Comments Section */}
+        {}
         <div className="mt-16">
           <CommentsSection />
         </div>

@@ -14,7 +14,7 @@ import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import { NotificationProvider } from "./context/NotificationContext";
-import { UserProvider } from "./context/UserContext"; // Import UserProvider
+import { UserProvider } from "./context/UserContext"; 
 import NotificationDrawer from "./components/NotificationDrawer";
 import JoinCommunity from './pages/JoinCommunity';
 
@@ -24,7 +24,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <NotificationProvider>
-        <UserProvider> {/* Add UserProvider */}
+        <UserProvider> {}
           <Toaster />
           <Sonner />
           <BrowserRouter>
@@ -40,7 +40,7 @@ const App = () => (
               <Route path="/profile" element={<Profile />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/join-community/:communityName" element={<JoinCommunity />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              {}
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
