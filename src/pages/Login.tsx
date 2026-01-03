@@ -19,7 +19,7 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const defaultAvatar = 'https:
+  const defaultAvatar = 'https://api.dicebear.com/8.x/bottts/svg';
 
   const handleGoogleSignIn = async () => {
     try {
@@ -186,7 +186,7 @@ const Login = () => {
               className="w-full bg-white text-black hover:bg-gray-200 transition-all duration-300 transform hover:scale-105 shadow-lg"
               variant="secondary"
             >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http:
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M22.56 12.25C22.56 11.45 22.49 10.65 22.36 9.88H12V14.51H18.2C17.92 16.03 17.13 17.33 15.89 18.23V20.84H19.74C21.68 19.04 22.56 16.2 22.56 12.25Z" fill="#4285F4"/>
                 <path d="M12 23C14.97 23 17.47 22.02 19.24 20.39L15.89 18.23C14.82 18.94 13.52 19.34 12 19.34C9.11 19.34 6.6 17.48 5.67 14.99H1.72V17.68C3.51 20.86 7.42 23 12 23Z" fill="#34A853"/>
                 <path d="M5.67 14.99C5.43 14.28 5.3 13.54 5.3 12.78C5.3 12.02 5.43 11.28 5.67 10.57V7.88H1.72C0.96 9.4 0.5 11.04 0.5 12.78C0.5 14.52 0.96 16.16 1.72 17.68L5.67 14.99Z" fill="#FBBC05"/>
