@@ -19,16 +19,16 @@ const Settings = () => {
       );
     };
 
-    if (!document.querySelector("script[src='
+    if (!document.querySelector("script[src='//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit']")) {
       const googleTranslateScript = document.createElement('script');
       googleTranslateScript.type = 'text/javascript';
       googleTranslateScript.async = true;
-      googleTranslateScript.src = '
+      googleTranslateScript.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
       document.head.appendChild(googleTranslateScript);
     }
 
     return () => {
-      const googleTranslateScript = document.querySelector("script[src='
+      const googleTranslateScript = document.querySelector("script[src='//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit']");
       if (googleTranslateScript) {
         googleTranslateScript.remove();
       }

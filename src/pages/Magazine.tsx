@@ -13,7 +13,7 @@ const articles = [
     date: '2025-11-12',
     readTime: '5 min read',
     category: 'Technology',
-    link: 'https:
+    link: 'https://bmsce.ac.in/department/CSE'
   },
   {
     id: 2,
@@ -23,7 +23,7 @@ const articles = [
     date: '2025-11-10',
     readTime: '8 min read',
     category: 'Features',
-    link: 'https:
+    link: 'https://bmsce.ac.in/department/CSE'
   },
   {
     id: 3,
@@ -33,7 +33,7 @@ const articles = [
     date: '2025-11-08',
     readTime: '6 min read',
     category: 'Environment',
-    link: 'https:
+    link: 'https://bmsce.ac.in/department/CSE'
   },
 ];
 
