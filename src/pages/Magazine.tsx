@@ -13,7 +13,7 @@ const articles = [
     date: '2025-11-12',
     readTime: '5 min read',
     category: 'Technology',
-    link: 'https://bmsce.ac.in/department/CSE'
+    link: 'https://bmsce.ac.in/home/Machine-Learning-AI-and-ML-News-and-Events',
   },
   {
     id: 2,
@@ -23,7 +23,7 @@ const articles = [
     date: '2025-11-10',
     readTime: '8 min read',
     category: 'Features',
-    link: 'https://bmsce.ac.in/department/CSE'
+    link: 'https://bmsce.ac.in/home/Computer-Science-and-Engineering-Student-Achievements',
   },
   {
     id: 3,
@@ -33,7 +33,7 @@ const articles = [
     date: '2025-11-08',
     readTime: '6 min read',
     category: 'Environment',
-    link: 'https://bmsce.ac.in/department/CSE'
+    link: 'https://bmsce.ac.in/home/About-Niranthara',
   },
 ];
 

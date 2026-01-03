@@ -36,6 +36,7 @@ const Settings = () => {
     };
   }, []);
 
+
   return (
     <div className="min-h-screen relative overflow-hidden">
       <StarBackground />
@@ -53,7 +54,7 @@ const Settings = () => {
         <h1 className="text-4xl font-bold text-foreground mb-8 animate-fade-in">Settings</h1>
 
         <div className="space-y-6">
-          {}
+          {/* Account Settings */}
           <FloatingCard delay={0.1}>
             <div className="flex items-center gap-3 mb-4">
               <User className="h-5 w-5 text-primary" />
@@ -77,7 +78,7 @@ const Settings = () => {
             </div>
           </FloatingCard>
 
-          {}
+          {/* Notifications */}
           <FloatingCard delay={0.2}>
             <div className="flex items-center gap-3 mb-4">
               <Bell className="h-5 w-5 text-primary" />
@@ -101,7 +102,7 @@ const Settings = () => {
             </div>
           </FloatingCard>
 
-          {}
+          {/* Privacy */}
           <FloatingCard delay={0.3}>
             <div className="flex items-center gap-3 mb-4">
               <Lock className="h-5 w-5 text-primary" />
@@ -125,7 +126,7 @@ const Settings = () => {
             </div>
           </FloatingCard>
 
-          {}
+          {/* Language */}
           <FloatingCard delay={0.4}>
             <div className="flex items-center gap-3 mb-4">
               <Globe className="h-5 w-5 text-primary" />

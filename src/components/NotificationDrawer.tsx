@@ -18,7 +18,7 @@ const NotificationDrawer = () => {
 
   return (
     <>
-      {}
+      {/* BACKDROP */}
       {isOpen && (
         <div
           onClick={closeNotifications}
@@ -26,14 +26,14 @@ const NotificationDrawer = () => {
         />
       )}
 
-      {}
+      {/* RIGHT DRAWER */}
       <div
         className={`fixed top-0 right-0 h-full w-[360px] bg-[#0D1224]/95 
           shadow-2xl border-l border-white/10 z-[9999] 
           transform transition-transform duration-300
           ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
       >
-        {}
+        {/* HEADER */}
         <div className="flex items-center justify-between p-5 border-b border-white/10">
           <h2 className="text-xl font-bold">Notifications</h2>
           <Button
@@ -46,7 +46,7 @@ const NotificationDrawer = () => {
           </Button>
         </div>
 
-        {}
+        {/* LIST */}
         <div className="p-4 space-y-4 overflow-y-auto h-[calc(100vh-70px)]">
           {notifications.length > 0 ? (
             notifications.map((item, index) => (

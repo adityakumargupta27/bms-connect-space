@@ -121,7 +121,7 @@ const Gallery = () => {
             console.log("Creating new post in Firestore...");
             await addDoc(collection(db, "gallery"), newPost);
             console.log("Post created. Refreshing gallery...");
-            fetchPosts(); 
+            fetchPosts(); // Refresh the gallery
             toast({
               id: toastId,
               title: "Photo Uploaded Successfully!",

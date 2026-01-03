@@ -10,7 +10,7 @@ import React, {
 interface Notification {
   title: string;
   body: string;
-  path?: string; 
+  path?: string; // Add optional path property
 }
 
 interface NotificationContextType {
