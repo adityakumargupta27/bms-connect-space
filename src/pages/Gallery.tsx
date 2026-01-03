@@ -36,7 +36,7 @@ const Gallery = () => {
       const querySnapshot = await getDocs(q);
       const postsList = querySnapshot.docs.map(doc => ({
         id: doc.id,
-        liked: false, 
+            liked: false, // Initial client-side state
         ...doc.data(),
       })) as Post[];
       setPosts(postsList);
